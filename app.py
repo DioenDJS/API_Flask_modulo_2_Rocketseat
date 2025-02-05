@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from typing_task import TaskTyping
 from models.task import Task
 import uuid
 
@@ -31,13 +32,28 @@ def get_tasks():
 
 @app.route('/tasks/<id>', methods=['GET'])
 def get_task(id:str):
-    task = None
     for t in tasks:
         if t.id == id:
             return t.to_dict()
 
     return jsonify({"message": "Mão foi possível encontrar a atividade "}), 404
 
+@app.route('/tasks/<id>', methods=['PUT'])
+def update_task(id):
+    task:TaskTyping = None
+    for t in tasks:
+        if t.id == str(id):
+            task = t
+
+    if task == None:
+        return jsonify({"message": "Não foi possível encontrar a atividade"}), 404
+
+    data = request.get_json()
+
+    task.title = data["title"]
+    task.description = data["description"]
+    task.completed = data["completed"]
+    return jsonify({"message":"Tarefa atualizada com sucesso"})
 
 if __name__ == "__main__":
     app.run(debug=True)
