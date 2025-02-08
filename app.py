@@ -17,7 +17,7 @@ def create_task():
     data = request.get_json()
     new_task = Task(id=str(uuid.uuid4()), title=data['title'], description=data.get("description", ""))
     tasks.append(new_task)
-    return jsonify({"mesage":"Nova tarefa criada com suucesso"})
+    return jsonify({"message":"Nova tarefa criada com suucesso", "id": new_task.id})
 
 @app.route('/tasks', methods=['GET'])
 def get_tasks():
